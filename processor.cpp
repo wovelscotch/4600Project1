@@ -15,11 +15,11 @@ Processor::Processor(int m ,int c)
       current_process = NULL;
 }
 //checks if processor meets mem requirements of process
-bool Processor::setCurr()
+bool Processor::setCurr(Process * inp)
 {
 			//if mem set to 0, ignore mem requirement
 			//if process memory > processor mem then reject
-			if(memory == 0||inp->getMem()<memory)
+			if(memory == 0||inp->getMemory()<memory)
 			{
 				current_process = inp;
 				return true;

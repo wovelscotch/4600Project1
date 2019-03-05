@@ -1,15 +1,3 @@
-main.cpp
-Earlier this week
-Sun 12:09 AM
-You edited an item
-Text
-main.cpp
-Last week
-Sat 2:19 PM
-You uploaded an item
-Binary File
-main.cpp
-
 #include <iostream>
 #include "processor.h"
 #include <cstdlib>
