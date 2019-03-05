@@ -12,7 +12,8 @@ int main()
 	long long int total_cycles = 0;		//total count of all cycles from all processes
 	int total_waits = 0;			//total wait time of all processes
 	bool is_not_empty = true;		//checks if process queue is empty
-	int process_count;			//process array iterator
+	bool is_all_idle = false;
+	int process_count,smallest;			//process array iterator
 	Process * proc_array[ARRAY_SIZE];	//process array
 	Processor processor[5];			//processor array, 5 processors
 
@@ -45,53 +46,54 @@ int main()
 		std::cout<<"Id: "<<proc_array[i]->getId()<<"\t";
 		std::cout<<"Cyc: "<<proc_array[i]->getCycles()<<"\t";
 		std::cout<<"Mem: "<<proc_array[i]->getMemory()<<"\n";
+		total_cycles += proc_array[i]->getCycles();
 	}
+	std::cout<<"Total Cycles: "<<total_cycles<<"\n";	//print definative total cycles
+	total_cycles = 0;	//reset total cycles
 
 	//init process count to 0 (first)
 	process_count = 0;
 	//execute all processes
-	while(is_not_empty)
+	//loops until process list is empty and all processors are idle (finished executing)
+	while(is_not_empty||!is_all_idle)
 	{
-		for(int i = 0; i < 5; i++)	//check all processes if waiting for process
+		is_all_idle = true;//assume break condition, must prove otherwise
+		//this loop checks processor idle condition and assigns new processes to idle processors
+		for(int i = 0; i < 5; i++)			//check all processes if waiting for process
 		{
-			if(process_count < ARRAY_SIZE)//if process available in array
-			{	
-				if(!processor[i].getIsRunning())//if not running, get new process
+			if(!processor[i].getIsRunning())	//if processor idle, attempt to get new process
+			{
+				if(process_count < ARRAY_SIZE)	//if process available in process list
 				{
-					std::cout<<"Processor "<<i<<" is getting new process ";//diag print
-					//give processor new process
 					processor[i].setCurr(proc_array[process_count]);
-					process_count++;
-					processor[i].setIsRunning(true);
-					//diagnostic print statement
-					std::cout<<processor[i].getCurr()->getId()<<"\n";
+					std::cout<<"Set "<<process_count<<" to P["<<i<<"]\n";
 				}
-				else	//process is running
-				{
-					processor[i].cycle();	//decrement cycle of process
-					total_cycles++;		//increment total number of cycles
-				}
-				for(int j = process_count; j < ARRAY_SIZE; j++)
-				{
-					//increment wait
-					proc_array[j]->incWait();
-				}
+				else
+					is_not_empty = false;
 			}
-			else	//process array is empty
-				is_not_empty = false;
-		}		
-	}
-	//finish running remaining process
-	for(int i = 0; i < 5; i++)
-	{
-		std::cout<<"I:"<<i<<"\n";
-		if(processor[i].getCurr()==NULL)
-			std::cout<<"NULL\n";
-		else
-		{
-		while(processor[i].cycle())
-			total_cycles++;
 		}
+		//this section simulates the running of processes
+		//it gets the processor with the smallest remaining cycles and stores the number
+		//it then decrements from all currently running processes that number
+		//this is to improve performace comapared to decrementing each process cycle by 1 each loop
+		//functionally it should be the same
+		//get smallest number of cycles remaining
+		smallest = processor[0].getCurr()->getCycles();	
+		for(int i = 1; i < 5;i++)
+		{
+			if(smallest < processor[i].getCurr()->getCycles())
+				smallest = processor[i].getCurr()->getCycles();
+		}
+		//decrement by smallest number of cycles
+		//also check for idle condition
+		for(int i = 0; i < 5;i++)
+		{
+			if(processor[i].cycle(smallest))
+				is_all_idle = false;
+			else
+				std::cout<<process_count<<" is done\n";
+		}
+		total_cycles+= smallest;					
 	}
 	//get total waits
 	for(int i = 0; i < ARRAY_SIZE;i++)

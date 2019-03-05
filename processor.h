@@ -28,4 +28,5 @@ class Processor
 		
 		//processor functions
 		bool cycle();
+		bool cycle(int);
 };
