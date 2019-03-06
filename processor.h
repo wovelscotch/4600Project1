@@ -9,7 +9,7 @@ class Processor
 	private:
 		int memory;			//memory availability of processor
 		int clock;			//clock speed of processor
-		int cycle_count;		//sum of cycles in process_list
+		long long int cycle_count;		//sum of cycles in process_list
 		Process ** process_list;	//list of assigned processes
 		int process_count;		//amount of processes in list
 		int process_list_size;		//size of list, including vacancies 
@@ -26,8 +26,8 @@ class Processor
 		void setClock(int inp){clock = inp;}
 		int getClock(){return clock;}
 		
-		void setCycleCount(int inp){cycle_count = inp;}
-		int getCycleCount(){return cycle_count;}
+		void setCycleCount(long long int inp){cycle_count = inp;}
+		long long int getCycleCount(){return cycle_count;}
 		
 		void setProcessCount(int inp){process_count = inp;}
 		int getProcessCount(){return process_count;}

@@ -25,7 +25,7 @@ Processor::Processor(int m ,int c)
 
 Processor::~Processor()
 {
-	delete process_list;
+	delete[] process_list;
 }
 //adds process to process_list
 void Processor::addProcess(Process * inp)

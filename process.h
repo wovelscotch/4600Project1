@@ -3,23 +3,23 @@ class Process
 {
 	private:
 		int id;		//process id
-		int cycles;	//number of cycles to compelete
+		long long int cycles;	//number of cycles to compelete
 		int memory;	//memory requirement 
-		int wait;	//number of cycles it has to wait
+		long long int wait;	//number of cycles it has to wait
 	public:
 		//sets and gets
 		int getId(){return id;}
 		void setId(int inp){id = inp;}
 
-		int getCycles(){return cycles;}
-		void setCycles(int inp){cycles = inp;}
+		long long getCycles(){return cycles;}
+		void setCycles(long long int inp){cycles = inp;}
 		void decCycles(){cycles--;}
 
 		int getMemory(){return memory;}
 		void setMemory(int inp){memory = inp;}
 
-		int getWait(){return wait;}
-		void setWait(int inp){wait = inp;}
+		long long int getWait(){return wait;}
+		void setWait(long long int inp){wait = inp;}
 		void incWait(){wait++;}
 		//constructors 
 		Process()

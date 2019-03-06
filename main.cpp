@@ -2,30 +2,33 @@
 #include "processor.h"
 #include <cstdlib>
 #include <fstream>
+#include <string>
+
 
 //prototype
-int getRand(long int,long int);
+long long int getRand(long long int,long long int);
 void bubbleSort(Process **,int);
 
 //main
 int main(int argc, char**argv)
 {
-	int avg_wait;
+	long long int avg_wait;
 	long long int total_cycles = 0;		//total count of all cycles from all processes
 	long long int total_waits = 0;			//total wait time of all processes
 	bool is_not_empty = true;		//checks if process queue is empty
 	bool is_all_idle = false;
-	int process_count,smallest;			//process array iterator
+	int process_count,smallest,batch;			//process array iterator
 	Process * proc_array[ARRAY_SIZE];	//process array
 	Processor processor[5];			//processor array, 5 processors
 	std::ofstream outfile;
-	outfile.open("output.txt");
-	int batch;
+	
 	if(argc != 2)
 	{
 		std::cout<<"Unexpected number of args\n";
+		std::cout<<"Usage: a.out <number of iterations>\n";
 		exit(0);
 	}
+	outfile.open("results.txt");
 	batch = atoi(argv[1]);
 	outfile<<"Number\tTotal Cycles\tIdeal Exec time\tExp Exec Time\tAvg Wait\n";
 	for(int j = 1; j <= batch; j++)
@@ -35,16 +38,16 @@ int main(int argc, char**argv)
 		//seed rand
 		srand(j);
 		outfile<<j<<"\t";
-	
+
 		for(int i = 0; i < ARRAY_SIZE; i++)
 		{
 			int temp_id;
-			int temp_cycles;
+			long long int temp_cycles;
 			int temp_memory;
 			//id
 			temp_id = i;
 			//cycles
-			temp_cycles = getRand(1,5000000);	//these are test values
+			temp_cycles = getRand(1000000,5000000000000);	//these are test values
 			//memory
 			temp_memory = getRand(250,8000000);	//units in KB
 			//create new process
@@ -55,7 +58,7 @@ int main(int argc, char**argv)
 	
 		//sort array by cycles, more likely to distribute evenly
 		bubbleSort(proc_array,ARRAY_SIZE);
-			
+
 		for(int i = 0; i < ARRAY_SIZE; i++)
 		{
 			//assign process to processor
@@ -78,10 +81,11 @@ int main(int argc, char**argv)
 		{
 			total_waits += proc_array[i]->getWait();
 		}
-		avg_wait = total_waits/ARRAY_SIZE;
+		avg_wait = (long long int)total_waits/(long long int)ARRAY_SIZE;
 		std::cout<<"Exec time\t: "<<total_cycles<<" cycles\n";
 		std::cout<<"Average Wait\t: "<<avg_wait<<" cycles\n";
 		outfile<<total_cycles<<"\t"<<avg_wait<<"\n";
+	
 		//cleanup 
 		for(int i = 0; i < 5; i++)
 			processor[i].wipe();
@@ -95,7 +99,7 @@ int main(int argc, char**argv)
 }
 
 //return random number between l and u 
-int getRand(long int l, long int u)
+long long int getRand(long long int l, long long int u)
 {
 	return (rand()%(u-l))+l;
 }
