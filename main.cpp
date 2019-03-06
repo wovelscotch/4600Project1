@@ -43,7 +43,7 @@ int main()
 	for(int i = 0; i < ARRAY_SIZE; i++)
 	{
 		//assign process to processor
-		Processor[i%5].addProcess(proc_array[i]);
+		processor[i%5].addProcess(proc_array[i]);
 	}
 	for(int i = 0; i < 5; i++)
 	{
