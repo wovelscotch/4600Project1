@@ -9,12 +9,13 @@ Processor::Processor()
 	process_list_size = ARRAY_SIZE/5;
 	process_count = 0;
 	process_list = new Process[process_list_size];
+	cycle_count = 0;
 }
 Processor::Processor(int m ,int c)
 {
 	memory = m;
 	clock = c;
-	process_list = NULL;
+	cycle_count = 0;
 	process_list_size = ARRAY_SIZE/5;
 	process_count = 0;
 	process_list = new Process[process_list_size];
