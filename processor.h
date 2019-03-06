@@ -1,6 +1,9 @@
 //processor class
 #include <cstdlib>
-#include "process.h"	
+#include "process.h"
+
+const int ARRAY_SIZE = 25;
+
 class Processor
 {
 	private:
