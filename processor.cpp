@@ -8,7 +8,7 @@ Processor::Processor()
 	clock = 0;
 	process_list_size = ARRAY_SIZE/5;
 	process_count = 0;
-	process_list = new Process[process_list_size];
+	process_list = new Process*[process_list_size];
 	cycle_count = 0;
 }
 Processor::Processor(int m ,int c)
@@ -18,7 +18,7 @@ Processor::Processor(int m ,int c)
 	cycle_count = 0;
 	process_list_size = ARRAY_SIZE/5;
 	process_count = 0;
-	process_list = new Process[process_list_size];
+	process_list = new Process*[process_list_size];
 	
 }
 //adds process to process_list
@@ -34,7 +34,7 @@ void Processor::addProcess(Process * inp)
 	{
 		process_list_size += ARRAY_SIZE;
 		int old_size = process_list_size;
-		Process ** new_array = new Process[process_list_size];
+		Process ** new_array = new Process*[process_list_size];
 		
 		for(int i = 0; i < old_size; i++)
 		{
