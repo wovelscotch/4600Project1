@@ -6,6 +6,7 @@
 int getRand(int,int);
 void bubbleSort(Process **,int);
 
+//main
 int main()
 {
 	long long int total_cycles = 0;		//total count of all cycles from all processes
