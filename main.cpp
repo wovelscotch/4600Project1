@@ -8,7 +8,6 @@ void bubbleSort(Process **,int);
 
 int main()
 {
-	const int ARRAY_SIZE = 25;		//number of processes
 	long long int total_cycles = 0;		//total count of all cycles from all processes
 	int total_waits = 0;			//total wait time of all processes
 	bool is_not_empty = true;		//checks if process queue is empty
