@@ -27,6 +27,8 @@ void Processor::addProcess(Process * inp)
 	//add to array
 	process_list[process_count] = inp;
 	process_count++;
+	//increase total cycle count
+	cycle_count += inp->getCycles();
 	//check if resize needed
 	if(process_count == process_list_size)
 	{
@@ -53,5 +55,6 @@ Process * Processor::getProcess(int inp)
 //deletes process from process_list
 void Processor::delProcess(int inp)
 {
+	cycle_count -= process_list[inp]->getCycles();
 	process_list[inp] = NULL;
 }
