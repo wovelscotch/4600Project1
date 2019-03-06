@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include "process.h"
 
-const int ARRAY_SIZE = 25;
+const int ARRAY_SIZE = 200;
 
 class Processor
 {
@@ -17,7 +17,8 @@ class Processor
 		//constructors
 		Processor();
 		Processor(int, int);
-	
+		~Processor();
+
 		//sets and gets
 		void setMem(int inp){memory = inp;}
 		int getMem(){return memory;}
@@ -37,4 +38,5 @@ class Processor
 		void addProcess(Process*);
 		Process * getProcess(int);
 		void delProcess(int);
+		void wipe();
 };

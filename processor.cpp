@@ -22,11 +22,18 @@ Processor::Processor(int m ,int c)
 	process_list = new Process*[process_list_size];
 	
 }
+
+Processor::~Processor()
+{
+	delete process_list;
+}
 //adds process to process_list
 void Processor::addProcess(Process * inp)
 {
 	//add to array
 	process_list[process_count] = inp;
+	//set wait time for process
+	process_list[process_count]->setWait(cycle_count);
 	process_count++;
 	//increase total cycle count
 	cycle_count += inp->getCycles();
@@ -58,4 +65,13 @@ void Processor::delProcess(int inp)
 {
 	cycle_count -= process_list[inp]->getCycles();
 	process_list[inp] = NULL;
+	process_count--;
+}
+
+void Processor::wipe()
+{
+	for(int i = 0; i < process_list_size;i++)
+		process_list[i] = NULL;
+	cycle_count = 0;
+	process_count = 0;
 }
