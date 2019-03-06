@@ -1,13 +1,18 @@
 //processor class
 #include <cstdlib>
-#include "process.h"	
+#include "process.h"
+
+const int ARRAY_SIZE = 25;
+
 class Processor
 {
 	private:
 		int memory;			//memory availability of processor
 		int clock;			//clock speed of processor
-		Process * current_process;	//ptr to currently executing process
-		bool is_running;		//true if process is executing
+		int cycle_count;		//sum of cycles in process_list
+		Process ** process_list;	//list of assigned processes
+		int process_count;		//amount of processes in list
+		int process_list_size;		//size of list, including vacancies 
 	public:
 		//constructors
 		Processor();
@@ -20,13 +25,16 @@ class Processor
 		void setClock(int inp){clock = inp;}
 		int getClock(){return clock;}
 		
-		bool setCurr(Process *);
-		Process * getCurr(){return current_process;}
-	
-		bool getIsRunning(){return is_running;}
-		void setIsRunning(bool inp){is_running = inp;}
+		void setCycleCount(int inp){cycle_count = inp;}
+		int getCycleCount(){return cycle_count;}
 		
-		//processor functions
-		bool cycle();
-		bool cycle(int);
+		void setProcessCount(int inp){process_count = inp;}
+		int getProcessCount(){return process_count;}
+	
+		void setProcessListSize(int inp){process_list_size = inp;}
+		int getProcessListSize(){return process_list_size;}
+		
+		void addProcess(Process*);
+		Process * getProcess(int);
+		void delProcess(int);
 };

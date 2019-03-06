@@ -8,7 +8,6 @@ void bubbleSort(Process **,int);
 
 int main()
 {
-	const int ARRAY_SIZE = 25;		//number of processes
 	long long int total_cycles = 0;		//total count of all cycles from all processes
 	int total_waits = 0;			//total wait time of all processes
 	bool is_not_empty = true;		//checks if process queue is empty
@@ -37,72 +36,18 @@ int main()
 		proc_array[i] = temp_proc;
 	}
 
-	//sort array by cycles
+	//sort array by cycles, more likely to distribute evenly
 	bubbleSort(proc_array,ARRAY_SIZE);
 	
-	//print list of processes for diagnostic purposes
-	for(int i = 0 ; i < ARRAY_SIZE; i++)
+	for(int i = 0; i < ARRAY_SIZE; i++)
 	{
-		std::cout<<"Id: "<<proc_array[i]->getId()<<"\t";
-		std::cout<<"Cyc: "<<proc_array[i]->getCycles()<<"\t";
-		std::cout<<"Mem: "<<proc_array[i]->getMemory()<<"\n";
-		total_cycles += proc_array[i]->getCycles();
+		//assign process to processor
+		processor[i%5].addProcess(proc_array[i]);
 	}
-	std::cout<<"Total Cycles: "<<total_cycles<<"\n";	//print definative total cycles
-	total_cycles = 0;	//reset total cycles
-
-	//init process count to 0 (first)
-	process_count = 0;
-	//execute all processes
-	//loops until process list is empty and all processors are idle (finished executing)
-	while(is_not_empty||!is_all_idle)
+	for(int i = 0; i < 5; i++)
 	{
-		is_all_idle = true;//assume break condition, must prove otherwise
-		//this loop checks processor idle condition and assigns new processes to idle processors
-		for(int i = 0; i < 5; i++)			//check all processes if waiting for process
-		{
-			if(!processor[i].getIsRunning())	//if processor idle, attempt to get new process
-			{
-				if(process_count < ARRAY_SIZE)	//if process available in process list
-				{
-					processor[i].setCurr(proc_array[process_count]);
-					std::cout<<"Set "<<process_count<<" to P["<<i<<"]\n";
-				}
-				else
-					is_not_empty = false;
-			}
-		}
-		//this section simulates the running of processes
-		//it gets the processor with the smallest remaining cycles and stores the number
-		//it then decrements from all currently running processes that number
-		//this is to improve performace comapared to decrementing each process cycle by 1 each loop
-		//functionally it should be the same
-		//get smallest number of cycles remaining
-		smallest = processor[0].getCurr()->getCycles();	
-		for(int i = 1; i < 5;i++)
-		{
-			if(smallest < processor[i].getCurr()->getCycles())
-				smallest = processor[i].getCurr()->getCycles();
-		}
-		//decrement by smallest number of cycles
-		//also check for idle condition
-		for(int i = 0; i < 5;i++)
-		{
-			if(processor[i].cycle(smallest))
-				is_all_idle = false;
-			else
-				std::cout<<process_count<<" is done\n";
-		}
-		total_cycles+= smallest;					
+		std::cout<<i<<" total count: "<<processor[i].getCycleCount()<<"\n";	
 	}
-	//get total waits
-	for(int i = 0; i < ARRAY_SIZE;i++)
-	{
-		total_waits += proc_array[i]->getWait();
-	}
-	std::cout<<"Total Cycle Count: "<<total_cycles<<"\n";
-	std::cout<<"Total Wait Count: "<<total_waits<<"\n";
-	std::cout<<"Average Wait :"<<(float)total_waits/(float)ARRAY_SIZE<<"\n";
 }
 
 //return random number between l and u 

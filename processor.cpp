@@ -1,64 +1,61 @@
 //processor.cpp
 
+
 #include "processor.h"
 
 Processor::Processor()
 {
 	memory = 0;
 	clock = 0;
-	current_process = NULL;
+	process_list_size = ARRAY_SIZE/5;
+	process_count = 0;
+	process_list = new Process*[process_list_size];
+	cycle_count = 0;
 }
 Processor::Processor(int m ,int c)
 {
 	memory = m;
 	clock = c;
-	current_process = NULL;
+	cycle_count = 0;
+	process_list_size = ARRAY_SIZE/5;
+	process_count = 0;
+	process_list = new Process*[process_list_size];
+	
 }
-//checks if processor meets mem requirements of process
-bool Processor::setCurr(Process * inp)
+//adds process to process_list
+void Processor::addProcess(Process * inp)
 {
-	//if mem set to 0, ignore mem requirement
-	//if process memory > processor mem then reject
-	if(memory == 0||inp->getMemory()<memory)
+	//add to array
+	process_list[process_count] = inp;
+	process_count++;
+	//increase total cycle count
+	cycle_count += inp->getCycles();
+	//check if resize needed
+	if(process_count == process_list_size)
 	{
-		current_process = inp;
-		return true;
+		process_list_size += ARRAY_SIZE;
+		int old_size = process_list_size;
+		Process ** new_array = new Process*[process_list_size];
+		
+		for(int i = 0; i < old_size; i++)
+		{
+			new_array[i] = process_list[i];	
+		}
+		delete[] process_list;
+		process_list = new_array;
 	}
-	return false;
-}
-//cycle process
-//returns true if process has cycles left to execute
-//returns false if process has 0 cycles left to execute (is finished)
-bool Processor::cycle()
-{
-	if(current_process == NULL)
-		return false;
-	if(current_process->getCycles() == 0)	//failsafe, probably uneccisary 
-		return false;
-	current_process->decCycles();		//decrement cycle & of process
-	if(current_process->getCycles())	//check if process is finished
-	{
-		is_running = true;
-		return true;
-	}
-	//process is finished
-	is_running = false;		
-	return false;
+		
 }
 
-//returns true if cycles remain in process, false if else
-bool Processor::cycle(int amount)
+//fetches process from process_list at indicated position
+Process * Processor::getProcess(int inp)
 {
-	int cycles;
-	if(current_process == NULL)
-		return false;
-	cycles = current_process->getCycles();	//get remaining cycles from process
-	cycles -= amount;			//decrement cycles by input amount
-	current_process->setCycles(cycles);	//set new amount to process
-	//if no cycles remain, set is_runnning to false
-	if(cycles)
-		is_running = true;
-	else
-		is_running = false;
-	return is_running;
+	return process_list[inp];
+}
+
+//deletes process from process_list
+void Processor::delProcess(int inp)
+{
+	cycle_count -= process_list[inp]->getCycles();
+	process_list[inp] = NULL;
 }
