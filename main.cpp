@@ -17,7 +17,7 @@ int main(int argc, char**argv)
 	long long int total_waits = 0;			//total wait time of all processes
 	bool is_not_empty = true;		//checks if process queue is empty
 	bool is_all_idle = false;
-	int process_count,smallest,batch;			//process array iterator
+	int process_count,smallest,batch, tc =0;			//process array iterator
 	Process * proc_array[ARRAY_SIZE];	//process array
 	Processor processor[5];			//processor array, 5 processors
 	std::ofstream outfile;
@@ -28,6 +28,11 @@ int main(int argc, char**argv)
 		std::cout<<"Usage: a.out <number of iterations>\n";
 		exit(0);
 	}
+	processor[0].setClock(2);
+	processor[1].setClock(2);
+	processor[2].setClock(3);
+	processor[3].setClock(3);
+	processor[4].setClock(4);
 	outfile.open("results.txt");
 	batch = atoi(argv[1]);
 	outfile<<"Number\tTotal Cycles\tIdeal Exec time\tExp Exec Time\tAvg Wait\n";
@@ -54,17 +59,42 @@ int main(int argc, char**argv)
 			Process * temp_proc = new Process(temp_id,temp_cycles,temp_memory);
 			//add process to array
 			proc_array[i] = temp_proc;
+			total_cycles += temp_cycles;
 		}
-	
-		//sort array by cycles, more likely to distribute evenly
-		bubbleSort(proc_array,ARRAY_SIZE);
-
-		for(int i = 0; i < ARRAY_SIZE; i++)
+		for(int i = 0; i < 5; i++)
+			tc += processor[i].getClock();//get total clock for expected calculation
+		for(int i = 0 ; i < 5; i++)
 		{
-			//assign process to processor
-			processor[i%5].addProcess(proc_array[i]);
-			total_cycles += proc_array[i]->getCycles();
+			processor[i].calcExpected(total_cycles,tc);//calc expected cycles
 		}
+		std::cout<<"Total cycles: "<<total_cycles<<"\n";
+		for(int i = 0; i < 5; i++)
+			std::cout<<"P"<<i<<" WCycles: "<<processor[i].getEWCycleCount()<<"\n";
+		//sort array by cycles to reduce wait times
+		bubbleSort(proc_array,ARRAY_SIZE);
+		int p = 4;
+		int sm;
+		for(int i = ARRAY_SIZE-1; i >=0; i--)
+		{
+			processor[p].addProcess(proc_array[i]);
+			if(processor[p].getCycleCount() > processor[p].getEWCycleCount())
+				p--;
+			if(p < 0)//this should not happen
+			{
+				exit(0);
+				sm = 0;
+				for(int k = 1; k < 5; k++)
+				{
+					long long int curr = processor[sm].getWCycleCount();
+					long long int next = processor[k].getWCycleCount();
+					if(next < curr)
+						sm = k;
+				}
+			}
+		}
+		//sort processes within processors
+		for(int i = 0; i < 5; i++)
+			bubbleSort(processor[i].getProcessList(),processor[i].getProcessCount());
 		std::cout<<"Total Cycles\t: "<<total_cycles<<"\n";
 		std::cout<<"Ideal Exec Time\t: "<<total_cycles/5<<"\n";
 			outfile<<total_cycles<<"\t"<<total_cycles/5<<"\t";

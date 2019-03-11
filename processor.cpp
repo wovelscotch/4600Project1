@@ -11,6 +11,8 @@ Processor::Processor()
 	process_count = 0;
 	process_list = new Process*[process_list_size];
 	cycle_count = 0;
+	weighted_cycle_count = 0;
+	expected_weighted_cycle_count = 0;
 }
 Processor::Processor(int m ,int c)
 {
@@ -20,7 +22,8 @@ Processor::Processor(int m ,int c)
 	process_list_size = ARRAY_SIZE/5;
 	process_count = 0;
 	process_list = new Process*[process_list_size];
-	
+	weighted_cycle_count = 0;
+	expected_weighted_cycle_count = 0;
 }
 
 Processor::~Processor()
@@ -37,6 +40,9 @@ void Processor::addProcess(Process * inp)
 	process_count++;
 	//increase total cycle count
 	cycle_count += inp->getCycles();
+	//get weighted cycle count if applicable
+	if(clock)
+		weighted_cycle_count = cycle_count / clock;
 	//check if resize needed
 	if(process_count == process_list_size)
 	{
@@ -74,4 +80,10 @@ void Processor::wipe()
 		process_list[i] = NULL;
 	cycle_count = 0;
 	process_count = 0;
+}
+
+void Processor::calcExpected(long long int cycle, int total_clock)
+{
+	if(clock)
+		expected_weighted_cycle_count = (cycle/total_clock)*clock;
 }
