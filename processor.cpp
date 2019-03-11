@@ -11,6 +11,7 @@ Processor::Processor()
 	process_count = 0;
 	process_list = new Process*[process_list_size];
 	cycle_count = 0;
+	expected_cycle_count = 0;
 }
 Processor::Processor(int m ,int c)
 {
@@ -20,7 +21,7 @@ Processor::Processor(int m ,int c)
 	process_list_size = ARRAY_SIZE/5;
 	process_count = 0;
 	process_list = new Process*[process_list_size];
-	
+	expected_cycle_count = 0;
 }
 
 Processor::~Processor()

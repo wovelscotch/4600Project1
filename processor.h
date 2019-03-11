@@ -13,6 +13,7 @@ class Processor
 		Process ** process_list;	//list of assigned processes
 		int process_count;		//amount of processes in list
 		int process_list_size;		//size of list, including vacancies 
+		long long int expected_cycle_count;
 	public:
 		//constructors
 		Processor();
@@ -35,6 +36,9 @@ class Processor
 		void setProcessListSize(int inp){process_list_size = inp;}
 		int getProcessListSize(){return process_list_size;}
 		
+		long long int getExpectedCycleCount(){return expected_cycle_count;}
+		void setExpectedCycleCount(long long int inp){expected_cycle_count = inp;}
+
 		void addProcess(Process*);
 		Process * getProcess(int);
 		void delProcess(int);
