@@ -72,32 +72,25 @@ int main(int argc, char**argv)
 			std::cout<<"P"<<i<<" WCycles: "<<processor[i].getEWCycleCount()<<"\n";
 		//sort array by cycles to reduce wait times
 		bubbleSort(proc_array,ARRAY_SIZE);
-		int p = 4;
-		int sm;
-		for(int i = ARRAY_SIZE-1; i >=0; i--)
+
+		
+		for(int i = 0; i < ARRAY_SIZE; i++)
 		{
-			processor[p].addProcess(proc_array[i]);
-			if(processor[p].getCycleCount() > processor[p].getEWCycleCount())
-				p--;
-			if(p < 0)//this should not happen
+			int sm = 0;
+			//get lowest weighted cycles
+			for(int k = 1; k < 5;k++)
 			{
-				exit(0);
-				sm = 0;
-				for(int k = 1; k < 5; k++)
+				if(processor[sm].getWCycleCount() > processor[k].getWCycleCount())
 				{
-					long long int curr = processor[sm].getWCycleCount();
-					long long int next = processor[k].getWCycleCount();
-					if(next < curr)
-						sm = k;
+					sm = k;
 				}
 			}
+			processor[sm].addProcess(proc_array[i]);//add to processor with lowest weighted cycles
 		}
-		//sort processes within processors
-		for(int i = 0; i < 5; i++)
-			bubbleSort(processor[i].getProcessList(),processor[i].getProcessCount());
+		
 		std::cout<<"Total Cycles\t: "<<total_cycles<<"\n";
 		std::cout<<"Ideal Exec Time\t: "<<total_cycles/5<<"\n";
-			outfile<<total_cycles<<"\t"<<total_cycles/5<<"\t";
+		outfile<<total_cycles<<"\t"<<total_cycles/5<<"\t";
 		total_cycles = processor[0].getCycleCount();
 		//print total cycles for each processor (mostly for diagnostic purposes)
 		for(int i = 0; i < 5; i++)
