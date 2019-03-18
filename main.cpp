@@ -38,7 +38,7 @@ int main(int argc, char**argv)
 		//seed rand
 		srand(j);
 		outfile<<j<<"\t";
-
+		//create processes
 		for(int i = 0; i < ARRAY_SIZE; i++)
 		{
 			int temp_id;
@@ -55,20 +55,21 @@ int main(int argc, char**argv)
 			//add process to array
 			proc_array[i] = temp_proc;
 		}
-	
-		//sort array by cycles, more likely to distribute evenly
-		bubbleSort(proc_array,ARRAY_SIZE);
-
-		for(int i = 0; i < ARRAY_SIZE; i++)
+		//assign all processes to processors
+		for(int k = 0; k < ARRAY_SIZE; k++)
 		{
-			//assign process to processor
-			processor[i%5].addProcess(proc_array[i]);
-			total_cycles += proc_array[i]->getCycles();
+			//assign processes to processors
+			//get processor with lowest cycles
+			int lowest = 0;
+			for(int i = 1; i < 5; i++)
+			{ 
+				if(processor[lowest].getCycleCount() > processor[i].getCycleCount())
+					lowest = i;
+					
+			}
+			//assign to lowest cycle processor
+			processor[lowest].addProcess(proc_array[k]);
 		}
-		std::cout<<"Total Cycles\t: "<<total_cycles<<"\n";
-		std::cout<<"Ideal Exec Time\t: "<<total_cycles/5<<"\n";
-			outfile<<total_cycles<<"\t"<<total_cycles/5<<"\t";
-		total_cycles = processor[0].getCycleCount();
 		//print total cycles for each processor (mostly for diagnostic purposes)
 		for(int i = 0; i < 5; i++)
 		{
@@ -85,7 +86,7 @@ int main(int argc, char**argv)
 		std::cout<<"Exec time\t: "<<total_cycles<<" cycles\n";
 		std::cout<<"Average Wait\t: "<<avg_wait<<" cycles\n";
 		outfile<<total_cycles<<"\t"<<avg_wait<<"\n";
-	
+		
 		//cleanup 
 		for(int i = 0; i < 5; i++)
 			processor[i].wipe();
