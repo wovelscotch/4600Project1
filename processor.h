@@ -2,13 +2,13 @@
 #include <cstdlib>
 #include "process.h"
 
-const int ARRAY_SIZE = 200;
+const int ARRAY_SIZE = 10;
 
 class Processor
 {
 	private:
-		int memory;			//memory availability of processor
-		int clock;			//clock speed of processor
+		long long int memory;			//memory availability of processor
+		long long int clock;			//clock speed of processor
 		long long int cycle_count;		//sum of cycles in process_list
 		Process ** process_list;	//list of assigned processes
 		int process_count;		//amount of processes in list
@@ -16,15 +16,15 @@ class Processor
 	public:
 		//constructors
 		Processor();
-		Processor(int, int);
+		Processor(long long int,long long int);
 		~Processor();
 
 		//sets and gets
-		void setMem(int inp){memory = inp;}
-		int getMem(){return memory;}
+		void setMem(long long int inp){memory = inp;}
+		long long int getMem(){return memory;}
 
-		void setClock(int inp){clock = inp;}
-		int getClock(){return clock;}
+		void setClock(long long int inp){clock = inp;}
+		long long int getClock(){return clock;}
 		
 		void setCycleCount(long long int inp){cycle_count = inp;}
 		long long int getCycleCount(){return cycle_count;}
