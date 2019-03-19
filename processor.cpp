@@ -86,4 +86,5 @@ void Processor::calcExpected(long long int cycle, int total_clock)
 {
 	if(clock)
 		expected_weighted_cycle_count = (cycle/total_clock)*clock;
+	weighted_cycle_count = (cycle_count/clock)*2;
 }

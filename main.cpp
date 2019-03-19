@@ -68,8 +68,6 @@ int main(int argc, char**argv)
 			processor[i].calcExpected(total_cycles,tc);//calc expected cycles
 		}
 		std::cout<<"Total cycles: "<<total_cycles<<"\n";
-		for(int i = 0; i < 5; i++)
-			std::cout<<"P"<<i<<" WCycles: "<<processor[i].getEWCycleCount()<<"\n";
 		//sort array by cycles to reduce wait times
 		bubbleSort(proc_array,ARRAY_SIZE);
 
@@ -95,7 +93,8 @@ int main(int argc, char**argv)
 		//print total cycles for each processor (mostly for diagnostic purposes)
 		for(int i = 0; i < 5; i++)
 		{
-			std::cout<<i<<" total count: "<<processor[i].getCycleCount()<<"\n";
+			std::cout<<i<<" total count: "<<processor[i].getCycleCount()<<"\t";
+			std::cout<<processor[i].getWCycleCount()<<"\n";
 			if(total_cycles < processor[i].getCycleCount())
 				total_cycles = processor[i].getCycleCount();
 		}
