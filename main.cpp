@@ -47,7 +47,7 @@ int main(int argc, char**argv)
 			//id
 			temp_id = i;
 			//cycles
-			temp_cycles = getRand(1000000,5000000000000);	//these are test values
+			temp_cycles = getRand(1,5000000);	//these are test values
 			//memory
 			temp_memory = getRand(250,8000000);	//units in KB
 			//create new process
