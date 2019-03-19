@@ -3,11 +3,11 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
-const unsigned long long GIGABYTE = 1000000000;
+const long long GIGABYTE = 1000000; //*10^3
 using namespace std;
 
 //prototype
-unsigned long long int getRand(long long int,unsigned long long int);
+long long int getRand(long long int,long long int);
 void bubbleSort(Process **,int);
 void bubbleSortM(Process **,int);
 
@@ -22,9 +22,9 @@ int main(int argc, char**argv)
 	int process_count,smallest,batch;			//process array iterator
 	Process * proc_array[ARRAY_SIZE];	//process array
 	Processor processor[5];			//processor array, 5 processors
-	unsigned long long int GB2 = 2*GIGABYTE;
-	unsigned long long int GB4 = 4*GIGABYTE;
-	unsigned long long int GB8 = 8*GIGABYTE;
+	const long long int GB2 = 2*GIGABYTE;
+	const long long int GB4 = 4*GIGABYTE;
+	const long long int GB8 = 8*GIGABYTE;
 	//int *array2, array4, array8;
 	Process * array2[ARRAY_SIZE];
 	Process * array4[ARRAY_SIZE];
@@ -54,49 +54,83 @@ std::ofstream outfile;
 		{
 			int temp_id;
 			long long int temp_cycles;
-			unsigned long long int temp_memory;
+			long long int temp_memory;
 			//id
 			temp_id = i;
 			//cycles
-			temp_cycles = getRand(1000000,5000000000000);	//these are test values
+			temp_cycles = getRand(1,5000000);//*10^6
 			//memory
-			temp_memory = getRand(250, 80000000000);   //units in GB
+			temp_memory = getRand(250,8000000); //.25MB - 8GB (in KB)
 			//create new process
 			Process * temp_proc = new Process(temp_id,temp_cycles,temp_memory);
 			//add process to array
 			proc_array[i] = temp_proc;
 		}
-	
+		//=========================DELETE============================================
+		std::ofstream pfile;
+		pfile.open("procs.txt");
+		for(int i = 0; i < ARRAY_SIZE;i++)
+			pfile<<proc_array[i]->getId()<<"\t"<<proc_array[i]->getCycles()<<"\t"<<proc_array[i]->getMemory()<<"\n";
+		pfile.close();
+		//===========================================================================	
 		//sort array by cycles, more likely to distribute evenly
 		bubbleSortM(proc_array,ARRAY_SIZE);// sorts array by memory size
+		pfile.open("pprocs.txt");
+		for(int i = 0; i < ARRAY_SIZE;i++)
+			pfile<<proc_array[i]->getId()<<"\t"<<proc_array[i]->getCycles()<<"\t"<<proc_array[i]->getMemory()<<"\n";
+		pfile.close();
                 // sorts array by mem size
-		for(int i = 0; i < ARRAY_SIZE; i++){
-			// processor handles processes with memory size of 2GB or less
-			if(proc_array[i]->getMemory()<= GB2 ){
-				array2[i] = proc_array[i];
-				temp2 +=1;
-				total_cycles += array2[i]->getCycles();
+		for(int i = ARRAY_SIZE-1; i >= 0; i--){
+			//add all <4GB to array8
+			if(proc_array[i]->getMemory() > GB4)
+			{
+				array8[temp8] = proc_array[i];
+				temp8++;
 			}
-			// processor handles processes with memory size of 4GB or less
-                        if( (proc_array[i]->getMemory()> GB2) &&(proc_array[i]->getMemory()<= GB4) ){
-				array4[i] = proc_array[i];
-				temp4+=1;
-				total_cycles += array4[i]->getCycles();
+			else if (proc_array[i]->getMemory()>GB2)
+			{
+				array4[temp4] = proc_array[i];
+				temp4++;
 			}
-			// processor handles processes with memory size of 8GB or less
-                        if( (proc_array[i]->getMemory()> GB4) ){
-				array8[i] = proc_array[i];
-				temp8+=1;
-				total_cycles += array8[i]->getCycles();
-	                }
+			else
+			{
+				array2[temp2] = proc_array[i];
+				temp2++;
+			}
+		
+
 		}
+		//DELETE
+		//=================================================
+		std::ofstream arrfile;
+		arrfile.open("2.txt");
+		for(int i = 0; i < temp2; i++)
+		{
+			arrfile<<array2[i]->getId()<<"\t"<<array2[i]->getMemory()<<"\n";
+		}
+		arrfile.close();
+		arrfile.open("4.txt");
+		for(int i = 0; i <temp4; i++)
+		{
+			arrfile<<array4[i]->getId()<<"\t"<<array4[i]->getMemory()<<"\n";
+		}
+		arrfile.close();
+		arrfile.open("8.txt");
+		for(int i = 0; i <temp8; i++)
+		{
+			arrfile<<array8[i]->getId()<<"\t"<<array8[i]->getMemory()<<"\n";
+		}
+		arrfile.close();
+
+
+		//==================================================
 		int deltemp2 = temp2, deltemp4 = temp4, deltemp8 = temp8;
 		//cout << "test1\n";
 		int expected_cycles = total_cycles/5;
 		// sorts the mem array by cycles from low to high
-		bubbleSort(array2,temp2+1);
-		bubbleSort(array4,temp4+1);
-		bubbleSort(array8,temp8+1);
+		bubbleSort(array2,temp2);
+		bubbleSort(array4,temp4);
+		bubbleSort(array8,temp8);
 		// adds memory greater than 4 GB to process 4
 		int k = 0, l = 0, m = 0;
 		while(processor[4].getCycleCount() < expected_cycles){
@@ -220,7 +254,7 @@ std::ofstream outfile;
 }
 
 //return random number between l and u 
-unsigned long long int getRand(long long int l, unsigned long long int u)
+long long int getRand(long long int l, long long int u)
 {
 	return (rand()%(u-l))+l;
 }

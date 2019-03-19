@@ -4,7 +4,7 @@ class Process
 	private:
 		int id;		//process id
 		long long int cycles;	//number of cycles to compelete
-		unsigned long long int memory;	//memory requirement 
+		long long int memory;	//memory requirement 
 		long long int wait;	//number of cycles it has to wait
 	public:
 		//sets and gets
@@ -16,7 +16,7 @@ class Process
 		void decCycles(){cycles--;}
 
 		long long int getMemory(){return memory;}
-		void setMemory(int inp){memory = inp;}
+		void setMemory(long long int inp){memory = inp;}
 
 		long long int getWait(){return wait;}
 		void setWait(long long int inp){wait = inp;}
@@ -25,20 +25,22 @@ class Process
 		Process()
 		{
 			id = cycles = memory = wait = 0;
+			cycles = 0;
+			memory = 0;
 		}
 		
-		Process(int c,int m)
+		Process(long long int c,long long int m)
 		{
 			id = wait = 0;
-			setCycles(c);// = c;
-			setMemory(m);// = m;
+			cycles = c;
+			memory = m;
 		}
 	
 		Process(int i, long long int c,long long  int m)
 		{
 			wait = 0;
 			id = i;
-                        setCycles(c);// = c;
-                        setMemory(m);// = m;
+                        cycles = c;
+                        memory = m;
 		}
 };

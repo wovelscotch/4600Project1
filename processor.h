@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include "process.h"
 
-const int ARRAY_SIZE = 10;
+const int ARRAY_SIZE = 200;
 
 class Processor
 {
